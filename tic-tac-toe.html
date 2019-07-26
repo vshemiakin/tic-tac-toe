@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        .square {
+            border: 2px solid black;
+            height: 30px;
+            width: 30px;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div id="1" class="square"></div>
+            <div id="2" class="square"></div>
+            <div id="3" class="square"></div>
+        </div>
+        <div class="row">
+            <div id="4" class="square"></div>
+            <div id="5" class="square"></div>
+            <div id="6" class="square"></div>
+        </div>
+        <div class="row">
+            <div id="7" class="square"></div>
+            <div id="8" class="square"></div>
+            <div id="9" class="square"></div>
+        </div>
+
+        <div>
+            <div id='message'></div>
+            <div id='start-button-div'></div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            bindSquares();
+        });
+
+        function bindSquares() {
+            clearBoard();
+            var xo = 'X';
+            var winLines = [[1, 2, 3], [4, 5, 6],
+                            [7, 8, 9], [1, 5, 9],
+                            [3, 5, 7], [1, 4, 7],
+                            [2, 5, 8], [3, 6, 9]];
+            var divsX = [];
+            var divsO = [];
+
+            $('.square').each(function (index) {
+                $(this).on('click', function () {
+                    if (xo == 'X') {
+                        $(this).append(xo);
+                        var xSquare = $(this).attr('id');
+                        divsX.push(+xSquare);
+                        winLines.forEach(function (item) {
+                            if (divsX.indexOf(item[0]) > -1 & divsX.indexOf(item[1]) > -1 & divsX.indexOf(item[2]) > -1) {
+                                $('#message').append('Winner: X');
+                                unbindSquares();
+                                addStartButton();
+                            }
+                        })
+                        xo = 'O';
+                        $(this).unbind();
+                    } else {
+                        $(this).append(xo);
+                        var oSquare = $(this).attr('id');
+                        divsO.push(+oSquare);
+                        winLines.forEach(function (item) {
+                            if (divsO.indexOf(item[0]) > -1 & divsO.indexOf(item[1]) > -1 & divsO.indexOf(item[2]) > -1) {
+                                $('#message').append('Winner: O');
+                                unbindSquares();
+                                addStartButton();
+                            }
+                        })
+                        xo = 'X';
+                        $(this).unbind();
+                    }
+                })
+            })
+        }
+
+        function clearBoard(winner) {
+            $('.square').each(function () {
+                $(this).empty();
+            });
+            $('#message').empty();
+            $('#start-button-div').empty();
+        }
+
+        function addStartButton() {
+            $('#start-button-div').append('<button id="start-button" class="btn btn-info">New game</button>');
+            $('#start-button').on('click', function () {
+                bindSquares();
+            });
+        }
+
+        function unbindSquares() {
+            $('.square').each(function () {
+                $(this).unbind();
+            });
+        }
+    </script>
+</body>
+</html>
